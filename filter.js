@@ -83,9 +83,9 @@ function populateSelectOptions(data) {
     
         // Redirect based on reportType
     if (filterData.reportType === "Failed") {
-        window.location.href = `failed.html?${queryString}`;  // Redirect to the Failed report page
+        window.location.href = `failed/failed.html?${queryString}`;  // Redirect to the Failed report page
     } else {
-        window.location.href = `passed.html?${queryString}`;  // Redirect to Passed report page
+        window.location.href = `passed/passed.html?${queryString}`;  // Redirect to Passed report page
     }
     });
     
