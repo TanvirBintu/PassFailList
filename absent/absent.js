@@ -42,15 +42,15 @@ fetch('data.json')
 
         const queryParams = getQueryParams();
 
-        // Filter data based on query parameters
+        // Filter data based on reportType 'Absent' and other query parameters
         const filteredData = studentData.filter(student => {
-            return (queryParams.class === "All" || student.class === queryParams.class) &&
+            return student.reportType === "Absent" &&
+                   (queryParams.class === "All" || student.class === queryParams.class) &&
                    (queryParams.group === "All" || student.group === queryParams.group) &&
                    (queryParams.section === "All" || student.section === queryParams.section) &&
-                   (queryParams.exam === "All" || student.exam === queryParams.exam) &&
-                   (queryParams.reportType === "All" || (queryParams.reportType === "Passed" && parseFloat(student.gpa) >= 1.0));
+                   (queryParams.exam === "All" || student.exam === queryParams.exam);
         });
-        
+
         // Check if any data was returned by the filter
         if (filteredData.length === 0) {
             console.warn('No matching data found for the given filters.');
@@ -65,16 +65,7 @@ function populateTable(data, queryParams) {
     const tableBody = document.getElementById('student-data');
     tableBody.innerHTML = ''; // Clear any existing rows
 
-    // Sort students by Total Marks (descending) and then by GPA (descending)
-    data.sort((a, b) => {
-        if (b.totalMarks == a.totalMarks) {
-            return b.gpa - a.gpa;  // If total marks are equal, sort by GPA
-        } else {
-            return b.totalMarks - a.totalMarks;  // Sort by total marks
-        }
-    });
-
-    // Populate the table
+    // Populate the table with absent students' data
     data.forEach((student, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -84,9 +75,6 @@ function populateTable(data, queryParams) {
             <td>${student.classRoll}</td>
             <td>${student.studentName}</td>
             <td>${queryParams.showMobile === "true" ? student.mobile : 'N/A'}</td>
-            <td>${student.totalMarks}</td>
-            <td>${student.gpa}</td>
-            <td>${index + 1}</td> <!-- Section position based on rank -->
         `;
         tableBody.appendChild(row);
     });

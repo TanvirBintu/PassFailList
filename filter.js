@@ -81,12 +81,15 @@ function populateSelectOptions(data) {
         // Build the query string
         const queryString = new URLSearchParams(filterData).toString();
     
-        // Redirect based on reportType
-    if (filterData.reportType === "Failed") {
-        window.location.href = `failed/failed.html?${queryString}`;  // Redirect to the Failed report page
-    } else {
-        window.location.href = `passed/passed.html?${queryString}`;  // Redirect to Passed report page
-    }
+
+    // Redirect based on reportType
+if (filterData.reportType === "Failed") {
+    window.location.href = `failed/failed.html?${queryString}`;  // Redirect to the Failed report page
+} else if (filterData.reportType === "Absent") {
+    window.location.href = `absent/absent.html?${queryString}`;  // Redirect to the Absent report page
+} else {
+    window.location.href = `passed/passed.html?${queryString}`;  // Redirect to the Passed report page
+}
     });
     
 }
@@ -94,6 +97,12 @@ function populateSelectOptions(data) {
 // Helper function to populate a select element
 function populateSelect(selectId, options) {
     const selectElement = document.getElementById(selectId);
+    if (selectId === 'group' || selectId === 'section' || selectId === 'passDate') {
+        const allOption = document.createElement('option');
+        allOption.value = 'All';
+        allOption.textContent = 'All';
+        selectElement.appendChild(allOption);
+    }
     options.forEach(option => {
         const optionElement = document.createElement('option');
         optionElement.value = option;
