@@ -8,9 +8,21 @@ function getQueryParams() {
 document.addEventListener('DOMContentLoaded', function () {
     const queryParams = getQueryParams();
 
-    // Update the report headings with the current filter values
-    document.querySelector('h3').textContent = `Class: ${queryParams.class}, Group: ${queryParams.group}, Section: ${queryParams.section || 'All'}`;
-    document.querySelector('h4').textContent = `Examination Name: ${queryParams.exam}`;
+    // Update Class, Group, Section in h2 spans
+    const classSpan = document.querySelector('h2 .highlight:nth-child(1)');
+    const groupSpan = document.querySelector('h2 .highlight:nth-child(2)');
+    const sectionSpan = document.querySelector('h2 .highlight:nth-child(3)');
+    
+    classSpan.textContent = queryParams.class || 'All';
+    groupSpan.textContent = queryParams.group || 'All';
+    sectionSpan.textContent = queryParams.section || 'All';
+
+    // Update the examination name and date in <p> tag
+    const examNameSpan = document.querySelector('p .highlight');
+    const dateSpan = document.querySelector('span.date .highlight');
+
+    examNameSpan.textContent = queryParams.exam || 'N/A';
+    dateSpan.textContent = queryParams.passDate || 'N/A';
 });
 
 // Fetch the JSON data and filter it based on the URL parameters
@@ -36,7 +48,7 @@ fetch('data.json')
                    (queryParams.group === "All" || student.group === queryParams.group) &&
                    (queryParams.section === "All" || student.section === queryParams.section) &&
                    (queryParams.exam === "All" || student.exam === queryParams.exam) &&
-                   (queryParams.reportType === "Failed" || (parseFloat(student.gpa) < 1.0));  // Only show failed students
+                   (queryParams.reportType === "Failed" && student.reportType !== "Absent");// Only show failed students
         });
 
         // Check if any data was returned by the filter
@@ -50,9 +62,26 @@ fetch('data.json')
 
 // Function to populate the table with filtered data
 function populateTable(data, queryParams) {
-    const tableBody = document.getElementById('reportTable').getElementsByTagName('tbody')[0];
+    const tableBody = document.getElementById('student-data');
     tableBody.innerHTML = ''; // Clear any existing rows
 
+    //Hide/show the mobile and section headers based on checkbox values
+    const mobileHeader = document.getElementById('mobile-header');
+    const sectionHeader = document.getElementById('section-header');
+
+    // Show/Hide Mobile Header
+    if (queryParams.showMobile === "true") {
+        mobileHeader.style.display = '';  // Show the header if the checkbox is checked
+    } else {
+        mobileHeader.style.display = 'none';  // Hide the header if the checkbox is unchecked
+    }
+
+    // Show/Hide Section Header
+    if (queryParams.showSection === "true") {
+        sectionHeader.style.display = '';  // Show the header if the checkbox is checked
+    } else {
+        sectionHeader.style.display = 'none';  // Hide the header if the checkbox is unchecked
+    }
     // Sort students by Total Marks (ascending) and then by GPA (ascending) for failed students
     data.sort((a, b) => {
         if (b.totalMarks == a.totalMarks) {
@@ -67,11 +96,11 @@ function populateTable(data, queryParams) {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${index + 1}</td>
-            <td>${student.section}</td>
+            ${queryParams.showSection === "true" ? `<td>${student.section}</td>` : ''}
             <td>${student.studentID}</td>
             <td>${student.classRoll}</td>
             <td>${student.studentName}</td>
-            <td>${queryParams.showMobile === "true" ? student.mobile : 'N/A'}</td>
+            ${queryParams.showMobile === "true" ? `<td>${student.mobile}</td>` : ''}
             <td>${student.resultDetails}</td>
         `;
         tableBody.appendChild(row);

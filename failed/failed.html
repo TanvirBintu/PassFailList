@@ -7,24 +7,30 @@
     <link rel="stylesheet" href="failed.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Failed Details Report</h2>
-        <h3>Class: XI, Group: Science, Section: All, Subject: All</h3>
-        <h4>Examination Name: Year Final</h4>
-        <table id="reportTable">
+    <div class="report-table">
+        <h1>Failed Report</h1>
+    <h2> 
+        Class: <span class="highlight"></span>, Group: <span class="highlight"></span>,
+        Section: <span class="highlight"></span>,
+    </h2>
+    <p>
+            Examination Name: <span class="highlight"></span>
+            <span class="date">Date: <span class="highlight"></span></span>
+        </p>
+        <table>
             <thead>
                 <tr>
                     <th>Sl</th>
-                    <th>Section</th>
+                    <th id="section-header">Section</th>
                     <th>Student ID</th>
                     <th>Class Roll</th>
                     <th>Student Name</th>
-                    <th>Mobile</th>
+                    <th id="mobile-header">Mobile</th>
                     <th>Result Details</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Data will be injected here from the script -->
+            <tbody id="student-data">
+                <!-- Data will be inserted here -->
             </tbody>
         </table>
     </div>

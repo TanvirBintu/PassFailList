@@ -65,8 +65,27 @@ function populateTable(data, queryParams) {
     const tableBody = document.getElementById('student-data');
     tableBody.innerHTML = ''; // Clear any existing rows
 
-    // Sort students by Total Marks (descending) and then by GPA (descending)
-    data.sort((a, b) => {
+
+    //Hide/show the mobile and section headers based on checkbox values
+    const mobileHeader = document.getElementById('mobile-header');
+    const sectionHeader = document.getElementById('section-header');
+
+    // Show/Hide Mobile Header
+    if (queryParams.showMobile === "true") {
+        mobileHeader.style.display = '';  // Show the header if the checkbox is checked
+    } else {
+        mobileHeader.style.display = 'none';  // Hide the header if the checkbox is unchecked
+    }
+
+    // Show/Hide Section Header
+    if (queryParams.showSection === "true") {
+        sectionHeader.style.display = '';  // Show the header if the checkbox is checked
+    } else {
+        sectionHeader.style.display = 'none';  // Hide the header if the checkbox is unchecked
+    }
+
+       // Sort students by Total Marks (descending) and then by GPA (descending)
+       data.sort((a, b) => {
         if (b.totalMarks == a.totalMarks) {
             return b.gpa - a.gpa;  // If total marks are equal, sort by GPA
         } else {
@@ -79,11 +98,11 @@ function populateTable(data, queryParams) {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${index + 1}</td>
-            <td>${student.section}</td>
+             ${queryParams.showSection === "true" ? `<td>${student.section}</td>` : ''}
             <td>${student.studentID}</td>
             <td>${student.classRoll}</td>
             <td>${student.studentName}</td>
-            <td>${queryParams.showMobile === "true" ? student.mobile : 'N/A'}</td>
+            ${queryParams.showMobile === "true" ? `<td>${student.mobile}</td>` : ''}
             <td>${student.totalMarks}</td>
             <td>${student.gpa}</td>
             <td>${index + 1}</td> <!-- Section position based on rank -->

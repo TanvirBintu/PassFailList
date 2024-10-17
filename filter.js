@@ -40,8 +40,8 @@ function populateSelectOptions(data) {
 
         // Define exam-to-passed-date mapping
         const examDateMapping = {
-            'Mid-Term 2024': 'January 2024',
-            'Year Final 2024': 'June 2024'
+            'Mid-Term 2024': 'January-2024',
+            'Year Final 2024': 'June-2024'
         };
 
         // Debugging: Check if the selected exam matches any in the mapping
@@ -110,3 +110,30 @@ function populateSelect(selectId, options) {
         selectElement.appendChild(optionElement);
     });
 }
+
+// Subject filter for absent report
+document.getElementById('reportType').addEventListener('change', function () {
+    const reportType = this.value;
+    const subjectCountDiv = document.getElementById('subjectCount').parentElement;
+    const subjectFilterDiv = document.getElementById('subjectFilter');
+
+    // Show Subject Filter and hide Subject Count when 'Absent' is selected
+    if (reportType === 'Absent') {
+        subjectCountDiv.style.display = 'none';  // Hide Subject Count
+        subjectFilterDiv.style.display = 'block';  // Show Subject Filter
+
+        // Populate subjects from JSON
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                const uniqueSubjects = [...new Set(data.student.map(item => item.subject))];
+                populateSelect('subject', uniqueSubjects);  // Use the same populateSelect function
+            })
+            .catch(error => console.error('Error fetching subjects:', error));
+
+    } else {
+        // Revert back to showing Subject Count and hiding Subject Filter
+        subjectCountDiv.style.display = 'block';
+        subjectFilterDiv.style.display = 'none';
+    }
+});
